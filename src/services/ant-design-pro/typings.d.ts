@@ -71,6 +71,12 @@ declare namespace API {
     loginType?: number;
   };
 
+  type RegisterParams = {
+    username?: string;
+    password?: string;
+    phoneNumber?: number;
+  };
+
   type ErrorResponse = {
     /** 业务约定的错误码 */
     errorCode: string;

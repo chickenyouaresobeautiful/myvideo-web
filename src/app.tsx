@@ -1,13 +1,16 @@
-import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
+import { AvatarDropdown, AvatarName, Footer, Question, SelectLang } from '@/components';
+import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
+import { message } from 'antd';
+import { AxiosResponse } from 'axios';
+import { RequestConfig } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
-import React from 'react';
+
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -126,11 +129,47 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 };
 
+// 获取 Token
+const getToken = () => localStorage.getItem('token'); // 假设 Token 存储在 localStorage
+
+// 请求前拦截器
+const authHeaderInterceptor = (url: string, options: any) => {
+  const token = getToken(); // 从 localStorage 获取 Token
+
+  // 如果 Token 存在，则附加到请求头
+  const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
+
+  // 返回修改后的 URL 和配置选项
+  return {
+    url,
+    options: {
+      ...options,
+      headers: {
+        ...options.headers,
+        ...authHeader,
+      },
+    },
+  };
+};
+
+// 响应拦截器：处理 Token 过期或者请求失败的情况
+const responseInterceptor = async (response: AxiosResponse) => {
+  if (response.status === 401) {
+    message.error('Token expired or unauthorized. Please log in again.');
+    // 这里可以进行 Token 刷新操作，或者重定向到登录页面
+    // window.location.href = '/login'; // 举个例子
+  }
+
+  return response;
+};
+
 /**
  * @name request 配置，可以配置错误处理
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const request = {
+export const request: RequestConfig = {
   ...errorConfig,
+  requestInterceptors: [authHeaderInterceptor], // 添加请求拦截器
+  responseInterceptors: [responseInterceptor], // 添加响应拦截器
 };

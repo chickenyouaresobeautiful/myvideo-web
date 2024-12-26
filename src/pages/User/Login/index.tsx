@@ -125,6 +125,8 @@ const Login: React.FC = () => {
           defaultMessage: '登录成功！',
         });
         message.success(defaultLoginSuccessMessage);
+        // 保存 Token 到 LocalStorage
+        localStorage.setItem('token', msg.data.token); // 假设返回的 token 字段是 'token'
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
@@ -361,6 +363,25 @@ const Login: React.FC = () => {
               }}
             >
               <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+            </a>
+            <span
+              style={{
+                float: 'right',
+                margin: '0 10px', // 给 | 和按钮之间添加一些间距
+              }}
+            >
+              {' '}
+              |
+            </span>
+            <a
+              style={{
+                float: 'right',
+              }}
+              onClick={() => {
+                history.push('/user/register');
+              }}
+            >
+              <FormattedMessage id="pages.login.registerAccount" defaultMessage="注册账户" />
             </a>
           </div>
         </LoginForm>

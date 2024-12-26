@@ -20,7 +20,7 @@ export async function outLogin(options?: { [key: string]: any }) {
   });
 }
 
-/** 登录接口 POST /api/login/account */
+/** 登录接口 POST /api/login */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
   return request<API.LoginResult>('/api/login', {
     method: 'POST',
@@ -28,6 +28,30 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** 注册接口 POST /api/register */
+export async function register(body: API.RegisterParams, options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 发送验证码接口 POST /api/send-verification-code */
+export async function sendVerificationCode(phone: string, options?: { [key: string]: any }) {
+  return request<API.LoginResult>('/thirdparty/send-verification-code', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: phone,
     ...(options || {}),
   });
 }

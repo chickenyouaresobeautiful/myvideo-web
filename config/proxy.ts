@@ -23,6 +23,10 @@ export default {
         '^/api': '/app', // 重写路径
       },
     },
+    '/thirdparty/': {
+      target: 'http://localhost:8080/',
+      changeOrigin: true,
+    },
   },
 
   /**
