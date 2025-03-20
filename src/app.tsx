@@ -53,7 +53,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   const avatarFileName = initialState?.currentUser?.avatar || 'default.png';
-  const avatarUrl = `http://47.99.75.148/upload/${avatarFileName}`;
+  const avatarUrl = `http://47.99.75.148/upload/avatar/${avatarFileName}`;
 
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
