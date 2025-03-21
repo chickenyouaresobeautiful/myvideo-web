@@ -28,10 +28,10 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
+    path: '/home',
+    name: 'home',
+    icon: 'home',
+    component: './Home',
   },
   {
     path: '/admin',
@@ -58,7 +58,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/home',
   },
   {
     path: '*',

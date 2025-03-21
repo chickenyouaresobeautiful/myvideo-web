@@ -13,15 +13,19 @@ export default {
   // 如果需要自定义本地开发服务器  请取消注释按需调整
   dev: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
-    '/api/': {
+    '/app/': {
       // 要代理的地址
       target: 'http://localhost:8080/',
       // 配置了这个可以从 http 代理到 https
       // 依赖 origin 的功能可能需要这个，比如 cookie
       changeOrigin: true,
       pathRewrite: {
-        '^/api': '/app', // 重写路径
+        // '^/api': '/app', // 重写路径
       },
+    },
+    '/api/': {
+      target: 'http://localhost:8080/',
+      changeOrigin: true,
     },
     '/thirdparty/': {
       target: 'http://localhost:8080/',

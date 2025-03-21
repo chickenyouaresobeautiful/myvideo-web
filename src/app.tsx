@@ -1,4 +1,11 @@
-import { AvatarDropdown, AvatarName, Footer, Question, SelectLang } from '@/components';
+import {
+  AvatarDropdown,
+  AvatarName,
+  Footer,
+  Question,
+  SelectLang,
+  VideoSearchBar,
+} from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
@@ -7,7 +14,7 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import { message } from 'antd';
 import { AxiosResponse } from 'axios';
-import { RequestConfig } from 'umi';
+import type { RequestConfig } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 
@@ -16,7 +23,7 @@ const loginPath = '/user/login';
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
- * */
+ */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
@@ -50,13 +57,25 @@ export async function getInitialState(): Promise<{
   };
 }
 
-// ProLayout 支持的api https://procomponents.ant.design/components/layout
+// ProLayout 支持的 api：https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   const avatarFileName = initialState?.currentUser?.avatar || 'default.png';
   const avatarUrl = `http://47.99.75.148/upload/avatar/${avatarFileName}`;
 
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    // 在顶部栏中加入搜索框，注意这里 headerContentRender 与 actionsRender 可以同时存在
+    headerContentRender: () => (
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <VideoSearchBar
+          placeholder="搜索视频"
+          onSearch={(value) => {
+            console.log('搜索:', value);
+            // 此处可添加搜索逻辑，比如页面跳转或调用接口
+          }}
+        />
+      </div>
+    ),
     avatarProps: {
       src: avatarUrl,
       title: <AvatarName />,
@@ -67,7 +86,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
+      // 如果没有登录，重定向到登录页面
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }
@@ -159,7 +178,6 @@ const responseInterceptor = async (response: AxiosResponse) => {
     // 这里可以进行 Token 刷新操作，或者重定向到登录页面
     // window.location.href = '/login'; // 举个例子
   }
-
   return response;
 };
 

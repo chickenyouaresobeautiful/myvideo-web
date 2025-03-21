@@ -31,6 +31,29 @@ declare namespace API {
     currentAuthority?: string;
   };
 
+  type VideoListItem = {
+    id?: number;
+    userId?: number;
+    title?: string;
+    description?: string;
+    url?: string;
+    thumbnailUrl?: string;
+    duration?: number;
+    views?: number;
+    createdAt?: string;
+    updateAt?: string;
+    privacy?: object;
+    categoryId?: number;
+  };
+
+  type VideoList = {
+    data?: VideoListItem[];
+    /** 列表的内容总数 */
+    total?: number;
+    code?: number;
+    msg?: string;
+  };
+
   type PageParams = {
     current?: number;
     pageSize?: number;
